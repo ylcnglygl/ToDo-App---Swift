@@ -17,10 +17,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var idList = [UUID]()
     var selectedToDo = ""
     var selectedToDoId : UUID?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+      
+     
+        
         
         getData()
         
@@ -48,6 +52,41 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         selectedToDo = jobList[indexPath.row]
         selectedToDoId = idList[indexPath.row]
         performSegue(withIdentifier: "toDetailViewController", sender: nil)
+    }
+    
+    //TABLE VIEW EDITING
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let context = appDelegate.persistentContainer.viewContext
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Todos")
+            
+            let idString = idList[indexPath.row].uuidString
+            fetchRequest.predicate = NSPredicate(format: "id = %@", idString)
+            fetchRequest.returnsObjectsAsFaults = false
+            do{
+                let results = try context.fetch(fetchRequest)
+                if results.count > 0 {
+                    for result in results as! [NSManagedObject]{
+                        if let id = result.value(forKey: "id") as? UUID{
+                            if id == idList[indexPath.row]{
+                                context.delete(result)
+                                jobList.remove(at: indexPath.row)
+                                idList.remove(at: indexPath.row)
+                                self.tableView.reloadData()
+                                do{
+                                   try context.save()
+                                }catch{
+                                    print("error")
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch{
+                print("error")
+            }
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import SwiftUI
 
 class DetailViewController: UIViewController {
     @IBOutlet var jobName: UILabel!
@@ -48,4 +49,10 @@ class DetailViewController: UIViewController {
     }
   
 
+}
+
+struct DetailViewController_Previews: PreviewProvider {
+    static var previews: some View {
+        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
+    }
 }
