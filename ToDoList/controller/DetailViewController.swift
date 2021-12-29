@@ -13,6 +13,7 @@ class DetailViewController: UIViewController {
     @IBOutlet var jobName: UILabel!
     @IBOutlet var jobDetail: UILabel!
     var jobId : UUID?
+    @IBOutlet var dateTimeLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +42,10 @@ class DetailViewController: UIViewController {
                     if let jobDetail = result.value(forKey: "jobDetail") as? String{
                         self.jobDetail.text = jobDetail
                     }
+                    if let date = result.value(forKey: "date") as? String{
+                        self.dateTimeLabel.text = date
+                    }
+                    
                 }
             }
         }catch{

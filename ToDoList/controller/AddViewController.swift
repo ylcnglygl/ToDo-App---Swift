@@ -11,12 +11,28 @@ import CoreData
 class AddViewController: UIViewController, UINavigationControllerDelegate {
     @IBOutlet var jobTextField: UITextField!
     @IBOutlet var jobDetailTextField: UITextField!
+    @IBOutlet var datePicker: UIDatePicker!
+    var strDate : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
+      
     }
     
-  
+    //ADD DATE TIME PICKER
+    
+    @IBAction func dateTimeChange(_ sender: Any) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.short
+        dateFormatter.timeStyle = DateFormatter.Style.short
+        
+        self.strDate = dateFormatter.string(from: self.datePicker.date)
+        if self.strDate == ""{
+            self.strDate = dateFormatter.string(from: Date())
+            print(self.strDate)
+        }
+    }
+    
     @IBAction func saveButtonClicked(_ sender: Any) {
         print("savebuton")
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -26,6 +42,7 @@ class AddViewController: UIViewController, UINavigationControllerDelegate {
         
         newTodo.setValue(jobTextField.text!, forKey: "job")
         newTodo.setValue(jobDetailTextField.text!, forKey: "jobDetail")
+        newTodo.setValue(self.strDate, forKey: "date")
         newTodo.setValue(UUID(), forKey: "id")
         
         do{
